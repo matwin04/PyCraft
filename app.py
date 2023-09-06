@@ -1,16 +1,56 @@
 from bottle import route, run, static_file, template, redirect
 import socket
 import subprocess
-
+from mcipc.rcon.be import Client
+from mcstats import mcstats
+import minestat
 ip=socket.gethostbyname(socket.gethostname())
+
+host = "localhost"
+port = 19132
+
+ms = minestat.MineStat(f'{ip}',19132)
+
+global server_status
+
+#Online Status
+if ms.online:
+    server_status = "ONLINE"
+else:
+    server_status = "OFFLINE"
+
+gamemode = ms.gamemode
+
+#Index
 @route('/')
 def index():
-    return template('./pages/index.html')
-
+    return template('./pages/index.html',
+                    server_status = server_status
+                    )
+@route('/bedrock')
+def index():
+    return template('./pages/bedrock_index.html',
+                    gamemode=ms.gamemode,
+                    address=ms.address,
+                    server_status = server_status
+                    )
+@route('/pm')
+def index():
+    return template('./pages/pocketmine_index.html',
+                    gamemode=ms.gamemode,
+                    address=ms.address,
+                    server_status = server_status
+                    )
 
 #command files
 @route('/start')
 def start():
-    subprocess.Popen(['bedrock_server.exe'])
+    subprocess.Popen(['BedrockServer/bedrock_server.exe'])
     redirect('/')
-run(host=ip,port=5555,debug=True,reloader=True)
+    
+    
+@route('/pm/start')
+def start():
+    subprocess.Popen(['/pocketmine_server/start.ps1'])
+    redirect('/pm')
+run(host=ip,port=5555,debug=True,reloader=True,)
