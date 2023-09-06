@@ -2,7 +2,7 @@ from bottle import route, run, static_file, template, redirect
 import socket
 import subprocess
 from mcipc.rcon.be import Client
-from mcstats import mcstats
+
 import minestat
 ip=socket.gethostbyname(socket.gethostname())
 
@@ -11,8 +11,10 @@ port = 19132
 
 ms = minestat.MineStat(f'{ip}',19132)
 
-global server_status
 
+
+#Server Status
+server_status = "OFFLINE"
 #Online Status
 if ms.online:
     server_status = "ONLINE"
@@ -21,11 +23,21 @@ else:
 
 gamemode = ms.gamemode
 
-#Index
+#Inde
+@route('/pages/<filename:path>')
+def serve_static(filename):
+    return static_file(filename, root='./pages/')
+
 @route('/')
+def login():
+    return template('./pages/login.html')
+@route('/home')
 def index():
+    global server_status
+    status_class = "online" if server_status == "ONLINE" else "offline"
     return template('./pages/index.html',
-                    server_status = server_status
+                    server_status = server_status,
+                    status_class=status_class
                     )
 @route('/bedrock')
 def index():

@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 
 <head>
+    <link rel="stylesheet" href="/pages/style.css">
+    <script src="/pages/scripts/status.js"></script>
     <title>Home</title>
 </head>
 
 
 <body>
+    <h1>PyCraft</h1>
+    <h2>By Frostie Studios</h2>
     <table>
         <tr>
             <td><a href="/bedrock">Bedrock</a></td>
             <td>Configure Files for Bedrock Server</td>
-            <td>{{server_status}}</td>
+            <td class="{{status_class}}">{{server_status}}</td>
         </tr>
         <tr>
             <td><a href="/pm">Pocketmine</a></td>
             <td>Configure Files for Bedrock Server with pocketmine to enable more features</td>
-            <td>{{server_status}}</td>
+            <td class="{{status_class}}">{{server_status}}</td>
         </tr>
     </table>
+    <h2>My Info</h2>
 </body>
